@@ -6,7 +6,7 @@
 /*   By: jmaurice <jmaurice@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/06/09 13:52:44 by jmaurice          #+#    #+#             */
-/*   Updated: 2014/06/16 14:57:45 by jmaurice         ###   ########.fr       */
+/*   Updated: 2014/06/16 16:21:31 by jmaurice         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ typedef struct			s_plyr
 {
 	int					id;
     int					sock;
-	int					team_id;
 	char				team_name[NAME];
 	int					pv;
 	int					lvl;
@@ -73,10 +72,19 @@ typedef struct			s_plyr
     struct s_plyr		*next;
 }						t_plyr;
 
+typedef struct			s_egg
+{
+	int					x;
+	int					y;
+	char				team_name[NAME];
+	struct s_egg		*next;
+}						t_egg;
+
 typedef struct			s_team
 {
-    int					id;
     char				name[NAME];
+	int					nb_disp;
+	t_egg				*egg;
     struct s_team		*next;
 }						t_team;
 

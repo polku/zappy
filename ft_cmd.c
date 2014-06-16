@@ -6,7 +6,7 @@
 /*   By: jmaurice <jmaurice@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/06/09 17:20:31 by jmaurice          #+#    #+#             */
-/*   Updated: 2014/06/16 14:42:14 by jmaurice         ###   ########.fr       */
+/*   Updated: 2014/06/16 15:51:09 by jmaurice         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,8 +116,7 @@ int		ft_nb_conn(t_server *serv, t_plyr *p, char *buff)
 
 int		ft_unknown(t_server *serv, t_plyr *p, char *buff)
 {
-	(void)serv;
-	(void)p;
 	(void)buff;
+	ft_send(serv, p->sock, "ko\n");
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: jmaurice <jmaurice@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/05/20 10:48:00 by jmaurice          #+#    #+#             */
-/*   Updated: 2014/06/16 12:07:50 by jmaurice         ###   ########.fr       */
+/*   Updated: 2014/06/16 15:55:12 by jmaurice         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,12 @@ int			add_plyr(t_server *serv)
 	sock = accept(serv->sock, (struct sockaddr *)&sai, (socklen_t *)&sz);
 	if (sock == -1)
 		ft_error("Error connection");
+	ft_send(serv, sock, "BIENVENUE\n");
 	serv->fd_max = (sock > serv->fd_max ? sock : serv->fd_max);
 	ft_putendl("Connection etablished");
-	serv->plyr = ft_add_plist(sock, id, serv->plyr);
+	serv->plyr = ft_add_plist(sock, id, serv->plyr); // + nom team
 	id++;
+	// recup nom equipe, chk nb _conn, auth ou pas conn , send dim md
 	return (0);
 }
 
