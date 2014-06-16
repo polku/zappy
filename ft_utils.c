@@ -6,7 +6,7 @@
 /*   By: jmaurice <jmaurice@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/05/20 12:11:17 by jmaurice          #+#    #+#             */
-/*   Updated: 2014/06/09 16:35:06 by jmaurice         ###   ########.fr       */
+/*   Updated: 2014/06/09 18:36:41 by jmaurice         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,3 +17,4 @@ void	ft_error(char *str)
 	ft_putendl(str);
 	exit(1);
 }
+

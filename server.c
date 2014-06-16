@@ -6,7 +6,7 @@
 /*   By: jmaurice <jmaurice@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/05/20 10:48:00 by jmaurice          #+#    #+#             */
-/*   Updated: 2014/06/09 18:27:36 by jmaurice         ###   ########.fr       */
+/*   Updated: 2014/06/16 12:07:50 by jmaurice         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int			del_plyr(t_server *serv, t_plyr *p)
 int			ft_usage(void)
 {
 	ft_putstr("Usage: ./serveur -p <port> -x <width> -y <height>");
-	ft_putstr(" -n <team> [<team>] [<team>] ... -c <nb> -t <t>");
+	ft_putstr(" -n <team> [<team>] [<team>] ... -c <nb> -t <t>\n");
 	return (-1);
 }
 
@@ -119,11 +119,12 @@ int		check_srv(t_server *srv)
 
 	// verif ts args corrects
 	// init ressources
-	srv->map = (char **) malloc(sizeof(char *) * srv->map_hgt);
+	srv->map = (t_case **) malloc(sizeof(t_case *) * srv->map_hgt);
 	i = 0;
 	while (i < srv->map_hgt)
-		srv->map[i++] = (char *) malloc(sizeof(char) * srv->map_width);
+		srv->map[i++] = (t_case *) malloc(sizeof(t_case) * srv->map_width);
 	srv->sock = init_conn(srv->port);
+	srv->sock_graph = init_conn(srv->port + 1);
 	srv->fd_max = srv->sock;
 	return (0);
 }
@@ -139,10 +140,11 @@ int			main(int ac, char **av)
 	t_server	*srv;
 	int			ret;
 
+	if (ac < 2)
+		return (ft_usage());
 	srv = init_serv();
 	parse_opt(srv, ac, av);
 	check_srv(srv);
-	tostring(srv);
 	while (1)
 	{
 		ft_fdset(srv);
@@ -150,8 +152,8 @@ int			main(int ac, char **av)
 		if (FD_ISSET(srv->sock, &srv->rd_set))
 			add_plyr(srv);
 		ft_fdisset(srv);
-		if (ret == 0)
-			ft_putendl("timeout");
+//		if (ret == 0)
+//			ft_putendl("timeout");
 	}
 	return (0);
 }
