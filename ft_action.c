@@ -6,7 +6,7 @@
 /*   By: jmaurice <jmaurice@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/05/21 10:49:37 by jmaurice          #+#    #+#             */
-/*   Updated: 2014/06/16 11:56:25 by jmaurice         ###   ########.fr       */
+/*   Updated: 2014/06/18 15:43:59 by jmaurice         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int		ft_fdset(t_server *serv)
 	return (0);
 }
 
+// main_loop
 int		ft_fdisset(t_server *serv)
 {
 	t_plyr	*tmp;
@@ -53,7 +54,9 @@ int		ft_fdisset(t_server *serv)
 			if (ft_recv(serv, tmp) == -1)
 				return (-1);
 			ft_cmd(serv, tmp, serv->buff_rd);
+//			ft_add_cmd();
 		}
+//		ft_exec_cmd();
 		tmp = tmp->next;
 	}
 	return (0);
