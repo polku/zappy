@@ -6,7 +6,7 @@
 /*   By: jmaurice <jmaurice@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/06/09 13:52:44 by jmaurice          #+#    #+#             */
-/*   Updated: 2014/06/19 17:00:05 by jmaurice         ###   ########.fr       */
+/*   Updated: 2014/06/19 11:48:11 by jmaurice         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,24 +43,6 @@
 # define THYSTAME		6
 # define NB_ELEM		7
 # define NB_CMD			10
-# define SEC			1000000
-
-
-typedef enum			e_com
-{
-	AVANCE,
-	DROITE,
-	GAUCHE,
-	VOIR,
-	INV,
-	PREND,
-	POSE,
-	EXP,
-	BROADCAST,
-	INCANTATION,
-	FORK,
-	CONN_NBR
-}						t_com;
 
 typedef enum			e_dir
 {
@@ -73,7 +55,7 @@ typedef enum			e_dir
 typedef struct			s_cmd
 {
 	time_t				end;
-	int					type;
+	int					cmd;
 	char				arg[BUFF_SZ];
 }						t_cmd;
 
@@ -88,8 +70,8 @@ typedef struct			s_plyr
 	int					x;
 	int					y;
 	t_dir				dir;
-	int					nb_cmds;
-	t_list				cmds;
+	t_cmd				cmd[NB_CMD];
+    struct s_plyr		*next;
 }						t_plyr;
 
 typedef struct			s_egg
@@ -97,6 +79,7 @@ typedef struct			s_egg
 	int					x;
 	int					y;
 	char				team_name[NAME];
+	struct s_egg		*next;
 }						t_egg;
 
 typedef struct			s_team
@@ -104,7 +87,8 @@ typedef struct			s_team
     char				name[NAME];
 	int					nb_disp;
 	int					nb_lvl_max;
-	t_list				*egg;
+	t_egg				*egg;
+    struct s_team		*next;
 }						t_team;
 
 typedef struct			s_case
@@ -119,8 +103,8 @@ typedef struct          s_server
 	int					sock_graph;
 	int					port;
     struct timeval      tm;
-    t_list            	*plyr;
-	t_list				*teams;
+    t_plyr            	*plyr;
+	t_team				*teams;
     fd_set              rd_set;
     int                 fd_max;
 	int					map_width;
@@ -130,8 +114,6 @@ typedef struct          s_server
 	int					speed;
 	char				buff_rd[BUFF_SZ];
 }						t_server;
-
-typedef		int (*t_func)(t_server *, t_player *, char *);
 
 void	ft_error(char *str);
 t_plyr  *ft_add_plist(int sock, int id, t_plyr *lst);

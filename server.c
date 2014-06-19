@@ -6,7 +6,7 @@
 /*   By: jmaurice <jmaurice@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/05/20 10:48:00 by jmaurice          #+#    #+#             */
-/*   Updated: 2014/06/16 15:55:12 by jmaurice         ###   ########.fr       */
+/*   Updated: 2014/06/19 17:21:25 by jmaurice         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ extern int		opterr;
 extern int		optopt;
 extern int		optreset;
 
-int			init_conn(int port)
+int			init_socket(int port)
 {
 	int					sock;
 	struct sockaddr_in	sai;
@@ -40,7 +40,7 @@ int			init_conn(int port)
 	return (sock);
 }
 
-t_server	*init_serv()
+t_server	*crea_serv()
 {
 	t_server	*serv;
 
@@ -49,33 +49,6 @@ t_server	*init_serv()
 	serv->tm.tv_sec = TIMEOUT;
 	serv->tm.tv_usec = 0;
 	return (serv);
-}
-
-int			add_plyr(t_server *serv)
-{
-	int					sz;
-	struct sockaddr_in	sai;
-	int					sock;
-	static int			id = 0;
-
-	sz = sizeof(sai);
-	sock = accept(serv->sock, (struct sockaddr *)&sai, (socklen_t *)&sz);
-	if (sock == -1)
-		ft_error("Error connection");
-	ft_send(serv, sock, "BIENVENUE\n");
-	serv->fd_max = (sock > serv->fd_max ? sock : serv->fd_max);
-	ft_putendl("Connection etablished");
-	serv->plyr = ft_add_plist(sock, id, serv->plyr); // + nom team
-	id++;
-	// recup nom equipe, chk nb _conn, auth ou pas conn , send dim md
-	return (0);
-}
-
-int			del_plyr(t_server *serv, t_plyr *p)
-{
-	close(p->sock);
-	serv->plyr = ft_del_plist(serv->plyr, p);
-	return (0);
 }
 
 int			ft_usage(void)
@@ -115,7 +88,7 @@ int			parse_opt(t_server *srv, int ac, char **av)
 	return (0);
 }
 
-int		check_srv(t_server *srv)
+int		check_serv(t_server *srv)
 {
 	int		i;
 
@@ -125,37 +98,31 @@ int		check_srv(t_server *srv)
 	i = 0;
 	while (i < srv->map_hgt)
 		srv->map[i++] = (t_case *) malloc(sizeof(t_case) * srv->map_width);
-	srv->sock = init_conn(srv->port);
-	srv->sock_graph = init_conn(srv->port + 1);
+	srv->sock = init_socket(srv->port);
+	srv->sock_graph = init_socket(srv->port + 1);
 	srv->fd_max = srv->sock;
 	return (0);
 }
 
-void		tostring(t_server *srv)
-{
-	ft_printf("sock = %d\nport = %d\nx = %d\ny = %d\nc = %d\nt = %d\n",
-			  srv->sock, srv->port, srv->map_width, srv->map_hgt, srv->max_plyr, srv->speed);
-}
-
 int			main(int ac, char **av)
 {
-	t_server	*srv;
+	t_server	*serv;
 	int			ret;
 
 	if (ac < 2)
 		return (ft_usage());
-	srv = init_serv();
-	parse_opt(srv, ac, av);
-	check_srv(srv);
+	srv = crea_serv();
+	parse_opt(serv, ac, av);
+	check_serv(serv);
 	while (1)
 	{
-		ft_fdset(srv);
-		ret = select(srv->fd_max + 1, &srv->rd_set, NULL, NULL, &srv->tm);
-		if (FD_ISSET(srv->sock, &srv->rd_set))
-			add_plyr(srv);
-		ft_fdisset(srv);
-//		if (ret == 0)
-//			ft_putendl("timeout");
+		ft_fdset(serv);
+		ret = select(serv->fd_max + 1, &serv->rd_set, NULL, NULL, &serv->tm);
+		if (FD_ISSET(serv->sock, &serv->rd_set))
+			ft_add_plyr(serv);
+		if (FD_ISSET(serv->sock_graph, &serv->rd_set))
+			ft_graph(serv, &serv->rd_set);
+		ft_loop(serv);
 	}
 	return (0);
 }
