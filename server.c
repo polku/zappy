@@ -74,8 +74,7 @@ int			parse_opt(t_server *srv, int ac, char **av)
 			{
 				optind--;
 				while (av[optind][0] != '-')
-					ft_printf("team = %s\n", av[optind++]);
-//					add_team(av[optind++]);
+					srv->team = ft_add_team(srv, srv->teams, av[optind++]);
 			}
 			if (optopt == 'c')
 				srv->max_plyr = ft_atoi(optarg);
