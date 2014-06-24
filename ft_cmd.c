@@ -6,51 +6,55 @@
 /*   By: jmaurice <jmaurice@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/06/09 17:20:31 by jmaurice          #+#    #+#             */
-/*   Updated: 2014/06/16 15:51:09 by jmaurice         ###   ########.fr       */
+/*   Updated: 2014/06/24 14:34:17 by jmaurice         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-int		ft_avance(t_server *serv, t_plyr *p, char *buff)
+int		ft_avance(t_server *serv, t_plyr *p, char *arg)
 {
-	(void)serv;
-	(void)buff;
+	(void)arg;
+	if (p->dir == N)
+		p->y = (p->y == 0 ? p->y - 1 : serv->map_hgt);
+	if (p->dir == S)
+		p->y = (p->y + 1) % serv->map_hgt;
+	if (p->dir == E)
+		p->x = (p->x + 1) % serv->map_width;
+	if (p->dir == W)
+		p->x = (p->x == 0 ? p->x - 1 : serv->map_width);
 	ft_send(serv, p->sock, "ok\n");
 	return (0);
 }
 
-int		ft_droite(t_server *serv, t_plyr *p, char *buff)
+int		ft_droite(t_server *serv, t_plyr *p, char *arg)
 {
-	(void)serv;
-	(void)buff;
+	(void)arg;
 	p->dir = (p->dir + 1) % 3;
 	ft_send(serv, p->sock, "ok\n");
 	return (0);
 }
 
-int		ft_gauche(t_server *serv, t_plyr *p, char *buff)
+int		ft_gauche(t_server *serv, t_plyr *p, char *arg)
 {
-	(void)serv;
-	(void)buff;
+	(void)arg;
 	p->dir = (p->dir - 1 == 0 ? 4 : p->dir - 1);
 	ft_send(serv, p->sock, "ok\n");
 	return (0);
 }
 
-int		ft_voir(t_server *serv, t_plyr *p, char *buff)
+int		ft_voir(t_server *serv, t_plyr *p, char *arg)
 {
-	(void)serv;
-	(void)p;
-	(void)buff;
+	(void)arg;
+	ft_send(serv, p->sock, "ko\n");
 	return (0);
 }
 
-int		ft_inv(t_server *serv, t_plyr *p, char *buff)
+int		ft_inv(t_server *serv, t_plyr *p, char *arg)
 {
-	char	tmp[BUFF_SZ];
+	char	tmp[ARG_SZ];
 
-	(void)buff;
+	(void)arg;
 	sprintf(tmp, "{nourriture %d, linemate %d, deraumere %d, sibur %d, mendiane %d, phiras %d, thystame %d}\n",
 			p->inv[FOOD], p->inv[LINEMATE], p->inv[DERAUMERE], p->inv[SIBUR],
 			p->inv[MENDIANE], p->inv[PHIRAS], p->inv[THYSTAME]);
@@ -58,65 +62,75 @@ int		ft_inv(t_server *serv, t_plyr *p, char *buff)
 	return (0);
 }
 
-int		ft_take(t_server *serv, t_plyr *p, char *buff)
+int		ft_take(t_server *serv, t_plyr *p, char *arg)
 {
-	(void)serv;
-	(void)p;
-	(void)buff;
+	(void)arg;
+	ft_send(serv, p->sock, "ko\n");
 	return (0);
 }
 
-int		ft_put(t_server *serv, t_plyr *p, char *buff)
+int		ft_put(t_server *serv, t_plyr *p, char *arg)
 {
-	(void)serv;
-	(void)p;
-	(void)buff;
+	(void)arg;
+	ft_send(serv, p->sock, "ko\n");
 	return (0);
 }
 
-int		ft_exp(t_server *serv, t_plyr *p, char *buff)
+int		ft_exp(t_server *serv, t_plyr *p, char *arg)
 {
-	(void)serv;
-	(void)p;
-	(void)buff;
+	(void)arg;
+	ft_send(serv, p->sock, "ko\n");
 	return (0);
 }
 
-int		ft_broadcast(t_server *serv, t_plyr *p, char *buff)
+int		ft_broadcast(t_server *serv, t_plyr *exp, char *arg)
 {
-	(void)serv;
-	(void)buff;
+	t_plyr	*tmp;
+
+	tmp = serv->plyr;
+	while (tmp)
+	{
+		if (tmp != exp)
+			ft_send(serv, tmp->sock, arg);
+		tmp = tmp->next;
+	}
+	ft_send(serv, exp->sock, "ok\n");
+	return (0);
+}
+
+int		ft_incantation(t_server *serv, t_plyr *p, char *arg)
+{
+	(void)arg;
+	ft_send(serv, p->sock, "ko\n");
+	return (0);
+}
+
+int		ft_fork(t_server *serv, t_plyr *p, char *arg)
+{
+	t_team	*tm;
+
+	(void)arg;
+	tm = ft_team_by_name(serv->teams, p->team_name);
+	tm->nb_disp++;
 	ft_send(serv, p->sock, "ok\n");
 	return (0);
 }
 
-int		ft_incantation(t_server *serv, t_plyr *p, char *buff)
+int		ft_nb_conn(t_server *serv, t_plyr *p, char *arg)
 {
-	(void)serv;
-	(void)p;
-	(void)buff;
+	t_team	*team;
+	char	res[ARG_SZ];
+
+	team = ft_team_by_name(serv->teams, arg);
+	ft_strcpy(res, ft_itoa(team->nb_disp));
+	ft_strcat(res, "\n");
+	ft_send(serv, p->sock, res);
 	return (0);
 }
 
-int		ft_fork(t_server *serv, t_plyr *p, char *buff)
+int		ft_unknown(t_server *serv, t_plyr *p, char *arg)
 {
-	(void)serv;
-	(void)buff;
-	ft_send(serv, p->sock, "ok\n");
-	return (0);
-}
-
-int		ft_nb_conn(t_server *serv, t_plyr *p, char *buff)
-{
-	(void)serv;
-	(void)p;
-	(void)buff;
-	return (0);
-}
-
-int		ft_unknown(t_server *serv, t_plyr *p, char *buff)
-{
-	(void)buff;
+	(void)arg;
 	ft_send(serv, p->sock, "ko\n");
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: jmaurice <jmaurice@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/05/20 10:48:00 by jmaurice          #+#    #+#             */
-/*   Updated: 2014/06/19 17:21:25 by jmaurice         ###   ########.fr       */
+/*   Updated: 2014/06/24 16:03:40 by jmaurice         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int			parse_opt(t_server *srv, int ac, char **av)
 			{
 				optind--;
 				while (av[optind][0] != '-')
-					srv->team = ft_add_team(srv, srv->teams, av[optind++]);
+					srv->teams = ft_add_team(srv, srv->teams, av[optind++]);
 			}
 			if (optopt == 'c')
 				srv->max_plyr = ft_atoi(optarg);
@@ -110,7 +110,7 @@ int			main(int ac, char **av)
 
 	if (ac < 2)
 		return (ft_usage());
-	srv = crea_serv();
+	serv = crea_serv();
 	parse_opt(serv, ac, av);
 	check_serv(serv);
 	while (1)
@@ -120,7 +120,8 @@ int			main(int ac, char **av)
 		if (FD_ISSET(serv->sock, &serv->rd_set))
 			ft_add_plyr(serv);
 		if (FD_ISSET(serv->sock_graph, &serv->rd_set))
-			ft_graph(serv, &serv->rd_set);
+//			ft_graph(serv, serv->buff_rd);
+			ft_putstr("G");
 		ft_loop(serv);
 	}
 	return (0);

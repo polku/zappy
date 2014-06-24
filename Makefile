@@ -6,7 +6,7 @@
 #    By: jmaurice <jmaurice@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2013/11/20 09:44:39 by jmaurice          #+#    #+#              #
-#    Updated: 2014/06/16 11:37:06 by jmaurice         ###   ########.fr        #
+#    Updated: 2014/06/24 15:20:23 by jmaurice         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -15,7 +15,8 @@ CFLAGS = -Wall -Wextra -Werror
 LDFLAGS = -Llibft/ -lft
 INC = -Ilibft/includes/ -I./
 LIB = libft/libft.a
-FILES_SERV = server ft_action ft_cmd ft_msg ft_lstplyr ft_utils
+FILES_SERV = server ft_action ft_cmd ft_lstcmd ft_lstplyr ft_lstteam\
+			ft_msg ft_plyr ft_utils
 SRC_SERV = $(addsuffix .c, $(FILES_SERV))
 OBJ_SERV = $(addsuffix .o, $(FILES_SERV))
 SERV_PATH = ./serveur/

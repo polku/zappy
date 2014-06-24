@@ -6,7 +6,7 @@
 /*   By: jmaurice <jmaurice@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/06/09 13:52:44 by jmaurice          #+#    #+#             */
-/*   Updated: 2014/06/19 17:00:05 by jmaurice         ###   ########.fr       */
+/*   Updated: 2014/06/24 15:50:17 by jmaurice         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,17 @@
 # define PHIRAS			5
 # define THYSTAME		6
 # define NB_ELEM		7
-# define NB_CMD			10
+# define NB_CMD			12
 # define SEC			1000000
+# define ARG_SZ			512
 
+typedef enum			e_dir
+{
+	N = 1,
+	E = 2,
+	S = 3,
+	W = 4
+}						t_dir;
 
 typedef enum			e_com
 {
@@ -62,19 +70,12 @@ typedef enum			e_com
 	CONN_NBR
 }						t_com;
 
-typedef enum			e_dir
-{
-	N = 1,
-	E = 2,
-	S = 3,
-	W = 4
-}						t_dir;
-
 typedef struct			s_cmd
 {
-	time_t				end;
+	struct timeval		end;
 	int					type;
 	char				arg[BUFF_SZ];
+	struct s_cmd		*next;
 }						t_cmd;
 
 typedef struct			s_plyr
@@ -89,7 +90,8 @@ typedef struct			s_plyr
 	int					y;
 	t_dir				dir;
 	int					nb_cmds;
-	t_list				cmds;
+	t_cmd				*cmd;
+    struct s_plyr		*next;
 }						t_plyr;
 
 typedef struct			s_egg
@@ -97,6 +99,7 @@ typedef struct			s_egg
 	int					x;
 	int					y;
 	char				team_name[NAME];
+	struct s_egg		*next;
 }						t_egg;
 
 typedef struct			s_team
@@ -104,7 +107,8 @@ typedef struct			s_team
     char				name[NAME];
 	int					nb_disp;
 	int					nb_lvl_max;
-	t_list				*egg;
+	t_egg				*egg;
+    struct s_team		*next;
 }						t_team;
 
 typedef struct			s_case
@@ -119,8 +123,8 @@ typedef struct          s_server
 	int					sock_graph;
 	int					port;
     struct timeval      tm;
-    t_list            	*plyr;
-	t_list				*teams;
+    t_plyr            	*plyr;
+	t_team				*teams;
     fd_set              rd_set;
     int                 fd_max;
 	int					map_width;
@@ -131,29 +135,44 @@ typedef struct          s_server
 	char				buff_rd[BUFF_SZ];
 }						t_server;
 
-typedef		int (*t_func)(t_server *, t_player *, char *);
+typedef		int (*t_func)(t_server *, t_plyr *, char *);
 
-void	ft_error(char *str);
-t_plyr  *ft_add_plist(int sock, int id, t_plyr *lst);
-t_plyr  *ft_del_plist(t_plyr *lst, t_plyr *elem);
-int		ft_recv(t_server *serv, t_plyr *p);
-int		ft_fdset(t_server *serv);
-int		ft_fdisset(t_server *serv);
-int		ft_cmd(t_server *serv, t_plyr *p, char *buff);
-int		ft_avance(t_server *serv, t_plyr *p, char *buff);
-int		ft_droite(t_server *serv, t_plyr *p, char *buff);
-int		ft_gauche(t_server *serv, t_plyr *p, char *buff);
-int		ft_voir(t_server *serv, t_plyr *p, char *buff);
-int		ft_inv(t_server *serv, t_plyr *p, char *buff);
-int		ft_take(t_server *serv, t_plyr *p, char *buff);
-int		ft_put(t_server *serv, t_plyr *p, char *buff);
-int		ft_exp(t_server *serv, t_plyr *p, char *buff);
-int		ft_broadcast(t_server *serv, t_plyr *p, char *buff);
-int		ft_incantation(t_server *serv, t_plyr *p, char *buff);
-int		ft_fork(t_server *serv, t_plyr *p, char *buff);
-int		ft_nb_conn(t_server *serv, t_plyr *p, char *buff);
-int		ft_unknown(t_server *serv, t_plyr *p, char *buff);
-int		ft_send(t_server *serv, int dest, char *msg);
-int		ft_send_all(t_server *serv, char *msg);
+int			ft_recv(t_server *serv, t_plyr *p);
+int			ft_fdset(t_server *serv);
+int			ft_loop(t_server *serv);
+int			ft_avance(t_server *serv, t_plyr *p, char *arg);
+int			ft_droite(t_server *serv, t_plyr *p, char *arg);
+int			ft_gauche(t_server *serv, t_plyr *p, char *arg);
+int			ft_voir(t_server *serv, t_plyr *p, char *arg);
+int			ft_inv(t_server *serv, t_plyr *p, char *arg);
+int			ft_take(t_server *serv, t_plyr *p, char *arg);
+int			ft_put(t_server *serv, t_plyr *p, char *arg);
+int			ft_exp(t_server *serv, t_plyr *p, char *arg);
+int			ft_broadcast(t_server *serv, t_plyr *exp, char *arg);
+int			ft_incantation(t_server *serv, t_plyr *p, char *arg);
+int			ft_fork(t_server *serv, t_plyr *p, char *arg);
+int			ft_nb_conn(t_server *serv, t_plyr *p, char *arg);
+int			ft_unknown(t_server *serv, t_plyr *p, char *arg);
+int			ft_graph(t_server *serv, char *buff);
+t_cmd		*ft_add_cmd(t_cmd *lst, char *cmd, char *arg);
+t_cmd		*ft_del_cmd(t_cmd *lst);
+t_plyr		*ft_add_plist(int sock, int id, t_plyr *lst);
+t_plyr		*ft_del_plist(t_plyr *lst, t_plyr *elem);
+t_team		*ft_team_by_name(t_team *lst, char *nm);
+t_team		*ft_add_team(t_server *serv, t_team *lst, char *nm);
+int			ft_send(t_server *serv, int dest, char *msg);
+int			ft_send_all(t_server *serv, char *msg);
+int			ft_add_plyr(t_server *serv);
+int			ft_del_plyr(t_server *serv, t_plyr *p);
+int			ft_cmd(char *buff);
+int			ft_save_cmd(t_server *serv, t_plyr *p, char *buff);
+int			ft_exec_cmd(t_server *serv, t_plyr *p);
+void		ft_error(char *str);
+int			init_socket(int port);
+t_server	*crea_serv();
+int			ft_usage(void);
+int			parse_opt(t_server *srv, int ac, char **av);
+int			check_serv(t_server *srv);
+void		ft_error(char *str);
 
 #endif
