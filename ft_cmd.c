@@ -6,7 +6,7 @@
 /*   By: jmaurice <jmaurice@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/06/09 17:20:31 by jmaurice          #+#    #+#             */
-/*   Updated: 2014/06/25 11:05:44 by jmaurice         ###   ########.fr       */
+/*   Updated: 2014/06/25 14:06:16 by jmaurice         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ int		ft_inv(t_server *serv, t_plyr *p, char *arg)
 	char	tmp[ARG_SZ];
 
 	(void)arg;
-	sprintf(tmp, "{nourriture %d, linemate %d, deraumere %d, sibur %d, mendiane %d, phiras %d, thystame %d}\n",
+	sprintf(tmp, "{nourriture %d, linemate %d, deraumere %d, sibur %d,"
+			"mendiane %d, phiras %d, thystame %d}\n",
 			p->inv[FOOD], p->inv[LINEMATE], p->inv[DERAUMERE], p->inv[SIBUR],
 			p->inv[MENDIANE], p->inv[PHIRAS], p->inv[THYSTAME]);
 	ft_send(serv, p->sock, tmp);
