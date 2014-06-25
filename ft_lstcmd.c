@@ -6,7 +6,7 @@
 /*   By: jmaurice <jmaurice@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/06/20 13:15:35 by jmaurice          #+#    #+#             */
-/*   Updated: 2014/06/24 15:44:44 by jmaurice         ###   ########.fr       */
+/*   Updated: 2014/06/25 11:06:44 by jmaurice         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ t_cmd	*ft_add_cmd(t_cmd *lst, char *cmd, char *arg)
 	tmp->next = new;
 	return (lst);
 }
-
 
 t_cmd	*ft_del_cmd(t_cmd *lst)
 {

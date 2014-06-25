@@ -6,7 +6,7 @@
 /*   By: jmaurice <jmaurice@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/06/19 11:59:58 by jmaurice          #+#    #+#             */
-/*   Updated: 2014/06/24 16:14:55 by jmaurice         ###   ########.fr       */
+/*   Updated: 2014/06/25 12:02:33 by jmaurice         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ int		ft_add_plyr(t_server *serv)
 	struct sockaddr_in	sai;
 	int					sock;
 	static int			id = 0;
-	t_team				team;
 
 	sz = sizeof(sai);
 	sock = accept(serv->sock, (struct sockaddr *)&sai, (socklen_t *)&sz);
@@ -27,10 +26,9 @@ int		ft_add_plyr(t_server *serv)
 	ft_send(serv, sock, "BIENVENUE\n");
 	serv->fd_max = (sock > serv->fd_max ? sock : serv->fd_max);
 	ft_putendl("Connection etablished");
-
 	serv->plyr = ft_add_plist(sock, id, serv->plyr); // + nom team
-	id++;
 	// recup nom equipe, chk nb _conn, auth ou pas conn , send dim md
+	id++;
 	return (0);
 }
 
@@ -92,7 +90,7 @@ int		ft_exec_cmd(t_server *serv, t_plyr *p)
 	struct timeval	time;
 	t_cmd			*tmp;
 	t_func			func[NB_CMD];
-	int				delay[NB_CMD] = { 7, 7, 7, 7, 1, 7, 7, 7, 7, 300, 42, 0 };
+	static int		delay[NB_CMD] = { 7, 7, 7, 7, 1, 7, 7, 7, 7, 300, 42, 0 };
 
 	gettimeofday(&time, NULL);
 	tmp = p->cmd;

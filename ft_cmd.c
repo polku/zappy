@@ -6,7 +6,7 @@
 /*   By: jmaurice <jmaurice@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/06/09 17:20:31 by jmaurice          #+#    #+#             */
-/*   Updated: 2014/06/24 14:34:17 by jmaurice         ###   ########.fr       */
+/*   Updated: 2014/06/25 11:05:44 by jmaurice         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,78 +59,5 @@ int		ft_inv(t_server *serv, t_plyr *p, char *arg)
 			p->inv[FOOD], p->inv[LINEMATE], p->inv[DERAUMERE], p->inv[SIBUR],
 			p->inv[MENDIANE], p->inv[PHIRAS], p->inv[THYSTAME]);
 	ft_send(serv, p->sock, tmp);
-	return (0);
-}
-
-int		ft_take(t_server *serv, t_plyr *p, char *arg)
-{
-	(void)arg;
-	ft_send(serv, p->sock, "ko\n");
-	return (0);
-}
-
-int		ft_put(t_server *serv, t_plyr *p, char *arg)
-{
-	(void)arg;
-	ft_send(serv, p->sock, "ko\n");
-	return (0);
-}
-
-int		ft_exp(t_server *serv, t_plyr *p, char *arg)
-{
-	(void)arg;
-	ft_send(serv, p->sock, "ko\n");
-	return (0);
-}
-
-int		ft_broadcast(t_server *serv, t_plyr *exp, char *arg)
-{
-	t_plyr	*tmp;
-
-	tmp = serv->plyr;
-	while (tmp)
-	{
-		if (tmp != exp)
-			ft_send(serv, tmp->sock, arg);
-		tmp = tmp->next;
-	}
-	ft_send(serv, exp->sock, "ok\n");
-	return (0);
-}
-
-int		ft_incantation(t_server *serv, t_plyr *p, char *arg)
-{
-	(void)arg;
-	ft_send(serv, p->sock, "ko\n");
-	return (0);
-}
-
-int		ft_fork(t_server *serv, t_plyr *p, char *arg)
-{
-	t_team	*tm;
-
-	(void)arg;
-	tm = ft_team_by_name(serv->teams, p->team_name);
-	tm->nb_disp++;
-	ft_send(serv, p->sock, "ok\n");
-	return (0);
-}
-
-int		ft_nb_conn(t_server *serv, t_plyr *p, char *arg)
-{
-	t_team	*team;
-	char	res[ARG_SZ];
-
-	team = ft_team_by_name(serv->teams, arg);
-	ft_strcpy(res, ft_itoa(team->nb_disp));
-	ft_strcat(res, "\n");
-	ft_send(serv, p->sock, res);
-	return (0);
-}
-
-int		ft_unknown(t_server *serv, t_plyr *p, char *arg)
-{
-	(void)arg;
-	ft_send(serv, p->sock, "ko\n");
 	return (0);
 }

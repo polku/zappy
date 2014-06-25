@@ -6,17 +6,17 @@
 /*   By: jmaurice <jmaurice@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/05/20 10:48:00 by jmaurice          #+#    #+#             */
-/*   Updated: 2014/06/24 16:03:40 by jmaurice         ###   ########.fr       */
+/*   Updated: 2014/06/25 12:09:36 by jmaurice         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-extern char		*optarg;
-extern int		optind;
-extern int		opterr;
-extern int		optopt;
-extern int		optreset;
+G_OPTARG;
+G_OPTIND;
+G_OPTERR;
+G_OPTOPT;
+G_OPTRESET;
 
 int			init_socket(int port)
 {
@@ -40,7 +40,7 @@ int			init_socket(int port)
 	return (sock);
 }
 
-t_server	*crea_serv()
+t_server	*crea_serv(void)
 {
 	t_server	*serv;
 
@@ -49,13 +49,6 @@ t_server	*crea_serv()
 	serv->tm.tv_sec = TIMEOUT;
 	serv->tm.tv_usec = 0;
 	return (serv);
-}
-
-int			ft_usage(void)
-{
-	ft_putstr("Usage: ./serveur -p <port> -x <width> -y <height>");
-	ft_putstr(" -n <team> [<team>] [<team>] ... -c <nb> -t <t>\n");
-	return (-1);
 }
 
 int			parse_opt(t_server *srv, int ac, char **av)
@@ -87,16 +80,16 @@ int			parse_opt(t_server *srv, int ac, char **av)
 	return (0);
 }
 
-int		check_serv(t_server *srv)
+int			check_serv(t_server *srv)
 {
 	int		i;
 
 	// verif ts args corrects
 	// init ressources
-	srv->map = (t_case **) malloc(sizeof(t_case *) * srv->map_hgt);
+	srv->map = (t_case **)malloc(sizeof(t_case *) * srv->map_hgt);
 	i = 0;
 	while (i < srv->map_hgt)
-		srv->map[i++] = (t_case *) malloc(sizeof(t_case) * srv->map_width);
+		srv->map[i++] = (t_case *)malloc(sizeof(t_case) * srv->map_width);
 	srv->sock = init_socket(srv->port);
 	srv->sock_graph = init_socket(srv->port + 1);
 	srv->fd_max = srv->sock;
