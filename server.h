@@ -6,7 +6,7 @@
 /*   By: jmaurice <jmaurice@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/06/09 13:52:44 by jmaurice          #+#    #+#             */
-/*   Updated: 2014/06/25 12:09:08 by jmaurice         ###   ########.fr       */
+/*   Updated: 2014/06/26 12:58:39 by jmaurice         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,7 @@ typedef struct			s_case
 typedef struct			s_server
 {
 	int					sock;
+	int					sock_conn_graph;
 	int					sock_graph;
 	int					port;
 	struct timeval		tm;
@@ -179,5 +180,17 @@ int						ft_usage(void);
 int						parse_opt(t_server *srv, int ac, char **av);
 int						check_serv(t_server *srv);
 void					ft_error(char *str);
+int						ft_conn_graph(t_server *serv);
+int						ft_graph(t_server *serv, char *buff);
+int						ft_msz(t_server *serv, char *buff);
+int						ft_bct(t_server *serv, char *buff);
+int						ft_mct(t_server *serv, char *buff);
+int						ft_tna(t_server *serv, char *buff);
+int						ft_sgt(t_server *serv, char *buff);
+int						ft_ppo(t_server *serv, char *buff);
+int						ft_plv(t_server *serv, char *buff);
+int						ft_pin(t_server *serv, char *buff);
+int						ft_sst(t_server *serv, char *buff);
+int						ft_suc(t_server *serv, char *buff);
 
 #endif

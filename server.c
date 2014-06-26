@@ -6,7 +6,7 @@
 /*   By: jmaurice <jmaurice@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/05/20 10:48:00 by jmaurice          #+#    #+#             */
-/*   Updated: 2014/06/25 12:09:36 by jmaurice         ###   ########.fr       */
+/*   Updated: 2014/06/26 13:08:35 by jmaurice         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,6 @@ int			check_serv(t_server *srv)
 {
 	int		i;
 
-	// verif ts args corrects
-	// init ressources
 	srv->map = (t_case **)malloc(sizeof(t_case *) * srv->map_hgt);
 	i = 0;
 	while (i < srv->map_hgt)
@@ -112,9 +110,10 @@ int			main(int ac, char **av)
 		ret = select(serv->fd_max + 1, &serv->rd_set, NULL, NULL, &serv->tm);
 		if (FD_ISSET(serv->sock, &serv->rd_set))
 			ft_add_plyr(serv);
-		if (FD_ISSET(serv->sock_graph, &serv->rd_set))
-//			ft_graph(serv, serv->buff_rd);
-			ft_putstr("G");
+		if (FD_ISSET(serv->sock_conn_graph, &serv->rd_set))
+			ft_conn_graph(serv);
+		if (FD_ISSET(serv->sock_conn_graph, &serv->rd_set))
+			ft_graph(serv, serv->buff_rd);
 		ft_loop(serv);
 	}
 	return (0);

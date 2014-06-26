@@ -6,7 +6,7 @@
 /*   By: jmaurice <jmaurice@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/06/19 11:59:58 by jmaurice          #+#    #+#             */
-/*   Updated: 2014/06/25 12:02:33 by jmaurice         ###   ########.fr       */
+/*   Updated: 2014/06/26 13:09:37 by jmaurice         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,7 @@ int		ft_add_plyr(t_server *serv)
 	ft_send(serv, sock, "BIENVENUE\n");
 	serv->fd_max = (sock > serv->fd_max ? sock : serv->fd_max);
 	ft_putendl("Connection etablished");
-	serv->plyr = ft_add_plist(sock, id, serv->plyr); // + nom team
-	// recup nom equipe, chk nb _conn, auth ou pas conn , send dim md
+	serv->plyr = ft_add_plist(sock, id, serv->plyr);
 	id++;
 	return (0);
 }
